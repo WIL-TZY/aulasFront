@@ -1,0 +1,5 @@
+Imagens:
+https://github.com/guntribam/roupas-fashion/tree/master/original/img
+
+Textos:
+https://github.com/guntribam/roupas-fashion/blob/master/sobre.txt
