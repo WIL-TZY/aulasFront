@@ -10,12 +10,32 @@
       crossorigin="anonymous"
     />
     <title>Relatorio Vendas</title>
-    <style></style>
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0, 0, 0, 0.5);
+      }
+
+	  .modal-content {
+		width: 100%;
+		height: 80%;
+		background-color: #fff;
+		border-radius: 5px;
+		box-shadow: 10px 10px 5px #aaaaaa;
+		padding: 10%;
+	  }
+    </style>
   </head>
   <body class="container">
     <h2>Registro de vendas</h2>
     <button id="meuBotao" class="btn btn-primary">Adicionar registro</button>
-    <table class="table mt-2">
+    
+	<table class="table mt-2">
       <!-- The <thead> tag is used to group header content in an HTML table. -->
       <thead>
         <!-- The <tr> tag defines a row in an HTML table.-->
@@ -29,13 +49,164 @@
         </tr>
       </thead>
       
-      <tbody>
-        <td>003</td>
+      <tbody id="corpoTabela">
+        <!-- <td>003</td>
         <td>Laura Cardozo Alves</td>
         <td>01</td>
         <td>001</td>
-        <td>2235000.00</td>
+        <td>2235000.00</td> -->
       </tbody>
     </table>
+
+    <div class="modal" id="minhaModal">
+       <div class="modal-content">
+			<h2>Adicionar Elemento</h2>
+			<form id="addForm">
+				<!-- <span>oi</span> -->
+				<div class="form-group">
+					<!-- 1 -->
+					<label for="codigoVendedor">Código do Vendedor:</label>
+					<input type="text" id="codigoVendedor" name="codigoVendedor" class="form-control">
+					<!-- 2 -->
+					<label for="nome">Nome:</label>
+					<input type="text" id="nome" name="nome" class="form-control">
+					<!-- 3 -->
+					<label for="codigoEquipe">Código da equipe:</label>
+					<input type="text" id="codigoEquipe" name="codigoEquipe" class="form-control">
+					<!-- 4 -->
+					<label for="codigoVenda">Código da venda:</label>
+					<input type="text" id="codigoVenda" name="codigoVenda" class="form-control">
+					<!-- 5 -->
+					<label for="valorVenda">Valor da venda:</label>
+					<input type="text" id="valorVenda" name="valorVenda" class="form-control">
+
+					<button type="submit" id="saveButton">Salvar</button>
+					<button type="reset" id="resetButton">Limpar</button>
+				</div>
+			</form>
+		</div>
+    </div>
+
+    <script>
+		// Pegar a tabela completa
+		let tableData = [
+			{
+				"codigoVendedor": 3,
+				"nome": "Laura Cardozo Alves",
+				"codigoEquipe": 1,
+				"codigoVenda": 1,
+				"valorVenda": 2235000
+			},
+			{
+				"codigoVendedor": 8,
+				"nome": "Paulo Oliveira",
+				"codigoEquipe": 2,
+				"codigoVenda": 2,
+				"valorVenda": 65889
+			},
+			{
+				"codigoVendedor": 4,
+				"nome": "Carlos Sánchez",
+				"codigoEquipe": 1,
+				"codigoVenda": 3,
+				"valorVenda": 18655
+			},
+			{
+				"codigoVendedor": 5,
+				"nome": "Arnaldo dos Santos",
+				"codigoEquipe": 1,
+				"codigoVenda": 4,
+				"valorVenda": 5102
+			},
+		];
+
+        const meuBotao = document.getElementById("meuBotao");
+        const minhaModal = document.getElementById("minhaModal");
+		const botaoSalvar = document.getElementById("saveButton");
+		const botaoLimpar = document.getElementById("resetButton");
+		const addForm = document.getElementById("addForm"); 
+
+        function mostrarModal() {
+          	minhaModal.style.display = 'block';
+        }
+
+		function criarVenda(venda) {
+			const registro = document.createElement("tr");
+
+			// Criar elementos da tabela
+			// 1
+			const codigoVendedor = document.createElement("td");
+			codigoVendedor.innerHTML = venda.codigoVendedor;
+			registro.appendChild(codigoVendedor);
+			// 2
+			const nome = document.createElement("td");
+			nome.innerHTML = venda.nome;
+			registro.appendChild(nome);
+			// 3
+			const codigoEquipe = document.createElement("td");
+			codigoEquipe.innerHTML = venda.codigoEquipe;
+			registro.appendChild(codigoEquipe);
+			// 4
+			const codigoVenda = document.createElement("td");
+			codigoVenda.innerHTML = venda.codigoVenda;
+			registro.appendChild(codigoVenda);
+			// 5
+			const valorVenda = document.createElement("td");
+			valorVenda.innerHTML = venda.valorVenda;
+			registro.appendChild(valorVenda);
+
+			// Adicionar na tabela
+			const corpoTabela = document.getElementById("corpoTabela");
+			corpoTabela.appendChild(registro);
+		}
+
+		function salvarVenda() {
+			event.preventDefault(); // Prevents the form from being submitted
+
+			const venda = {
+				codigoVendedor: document.getElementById('codigoVendedor').value,
+				nome: document.getElementById('nome').value,
+				codigoEquipe: document.getElementById('codigoEquipe').value,
+				codigoVenda: document.getElementById('codigoVenda').value,
+				valorVenda: document.getElementById('valorVenda').value,
+			}
+
+			// Limpando campos após envio do formulário
+			// document.getElementById('codigoVendedor').value = "",
+			// document.getElementById('nome').value = "",
+			// document.getElementById('codigoEquipe').value = "",
+			// document.getElementById('codigoVenda').value = "",
+			// document.getElementById('valorVenda').value = "",
+			botaoLimpar.click();
+
+			// Sumir com a modal
+			minhaModal.style.display = 'none';
+
+			criarVenda(venda);
+			
+			// Adicionando ao Local Storage do browser
+			//localStorage.setItem("ListaDeVendas", tableData);
+		}
+
+        meuBotao.addEventListener('click', mostrarModal);
+        window.addEventListener('click', function(event) {
+          if (event.target === minhaModal){
+            minhaModal.style.display = 'none';
+          }
+        });
+
+		botaoSalvar.addEventListener('click', salvarVenda);
+
+		// Add the event listener to the form
+		addForm.addEventListener('submit', salvarVenda);
+
+		window.addEventListener('DOMContentLoad', function() {
+			//tableData = localStorage.get("ListaDeVendas");
+			for(let i = 0; i < tableData.length; i++) {
+				criarVenda(tableData[i]);
+			}
+		}); 
+
+    </script>
   </body>
 </html>
