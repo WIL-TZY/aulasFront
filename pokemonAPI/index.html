@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pokémon API Demo</title>
+  </head>
+  <body>
+    <h1>Pokémon Fetch API Demo</h1>
+    <button id="fetchButton">Fetch Pokémon</button>
+    <input id="idPokemon" type="text" />
+    <div id="pokemonInfo"></div>
+    <script>
+        document.getElementById("fetchButton").addEventListener("click", function () {
+            fetch(`https://pokeapi.co/api/v2/pokemon/${document.getElementById("idPokemon").value}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const pokemonDiv = document.getElementById("pokemonInfo");
+                pokemonDiv.innerHTML = 
+                `
+                <h2>${data.name}</h2>
+                <img src="${data.sprites.front_default}" alt="${data.name}" />
+                `;
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>
